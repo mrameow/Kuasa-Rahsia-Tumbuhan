@@ -182,29 +182,36 @@ const hasilSenarai = [
 ];
 
 // ---------- PADANAN INGATAN (memory match) ----------
+// Dua kategori berasingan, setiap satu dengan "base" (corak) yang konsisten
+// supaya murid tidak keliru bertukar-tukar jenis padanan dalam satu pusingan.
 // setiap objek {id, ikon, label} - dua entri sepasang akan berkongsi 'id'
-const kadMemori = [
-  {id:1, ikon:"☀️", label:"Cahaya"},
-  {id:1, ikon:"🌱↗️", label:"Pucuk Condong"},
 
-  {id:2, ikon:"🌍", label:"Graviti"},
-  {id:2, ikon:"⬇️🌱", label:"Akar Ke Bawah"},
+// Kategori 1: RANGSANGAN → GERAK BALAS (padanan sebab kepada akibat)
+const kadMemoriGerak = [
+  {id:1, ikon:"☀️", label:"Rangsangan: Cahaya"},
+  {id:1, ikon:"🌱↗️", label:"Gerak Balas: Pucuk Condong"},
 
-  {id:3, ikon:"💧", label:"Air"},
-  {id:3, ikon:"↩️🌱", label:"Akar Membelok"},
+  {id:2, ikon:"🌍", label:"Rangsangan: Graviti"},
+  {id:2, ikon:"⬇️🌱", label:"Gerak Balas: Akar Ke Bawah"},
 
-  {id:4, ikon:"🤚", label:"Sentuhan"},
-  {id:4, ikon:"🥀", label:"Pokok Semalu"},
+  {id:3, ikon:"💧", label:"Rangsangan: Air"},
+  {id:3, ikon:"↩️🌱", label:"Gerak Balas: Akar Membelok"},
 
-  {id:5, ikon:"🍃", label:"Klorofil"},
-  {id:5, ikon:"🎨", label:"Pewarna Hijau"},
+  {id:4, ikon:"🤚", label:"Rangsangan: Sentuhan"},
+  {id:4, ikon:"🥀", label:"Gerak Balas: Pokok Semalu Kuncup"}
+];
 
-  {id:6, ikon:"💨💧", label:"CO₂ + Air"},
-  {id:6, ikon:"🍬", label:"Glukosa"},
+// Kategori 2: BAHAN → HASIL FOTOSINTESIS (padanan input kepada output)
+const kadMemoriFoto = [
+  {id:1, ikon:"☀️", label:"Bahan: Cahaya Matahari"},
+  {id:1, ikon:"🔋", label:"Fungsi: Sumber Tenaga"},
 
-  {id:7, ikon:"🍃🏭", label:"Kilang Daun"},
-  {id:7, ikon:"🫧", label:"Oksigen"},
+  {id:2, ikon:"🍃", label:"Bahan: Klorofil"},
+  {id:2, ikon:"🎨", label:"Fungsi: Pewarna Hijau"},
 
-  {id:8, ikon:"🍬", label:"Kanji Simpanan"},
-  {id:8, ikon:"🍅", label:"Buah & Biji"}
+  {id:3, ikon:"💨+💧", label:"Bahan: CO₂ + Air"},
+  {id:3, ikon:"🍬", label:"Hasil: Glukosa"},
+
+  {id:4, ikon:"🍃🏭", label:"Tempat: Daun (Kilang)"},
+  {id:4, ikon:"🫧", label:"Hasil: Oksigen"}
 ];

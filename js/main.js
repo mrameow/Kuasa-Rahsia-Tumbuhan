@@ -35,7 +35,6 @@ function bukaScene(nama){
   } else if(nama==='kuiz'){
     tunjukSkrin('layar-kuiz-pilih');
   } else if(nama==='memori'){
-    tunjukSkrin('layar-memori');
-    mulakanMemori();
+    tunjukSkrin('layar-memori-pilih');
   }
 }

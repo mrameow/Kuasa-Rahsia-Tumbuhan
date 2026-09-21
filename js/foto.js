@@ -1,5 +1,5 @@
 /* ======================================================
-   FOTO.JS — Dapur Magis Fotosintesis (sandbox interaktif)
+   FOTO.JS — Dapur Magis Fotosintesis (simulasi SVG pokok)
    ====================================================== */
 
 let siang = true;
@@ -9,12 +9,10 @@ let glukosaKira = 0, oksigenKira = 0, buahKira = 0;
 
 function togglMalam(){
   siang = !siang;
-  const panggung = document.getElementById('stageFoto');
-  const matahari = document.getElementById('matahariBesar');
-  panggung.classList.toggle('malam', !siang);
-  matahari.textContent = siang ? '☀️' : '🌙';
-  matahari.classList.toggle('off', !siang);
-  document.getElementById('daunBesar').classList.toggle('tidur', !siang);
+  document.getElementById('matahariGroup').classList.toggle('malam', !siang);
+  document.getElementById('rectLangitMalam').setAttribute('opacity', siang ? 0 : 1);
+  document.getElementById('bintang').setAttribute('opacity', siang ? 0 : 1);
+  document.getElementById('kanopiGroup').classList.toggle('malam-daun', !siang);
   if(siang){
     tunjukToast('☀️ Siang hari — cahaya matahari tersedia untuk fotosintesis!');
     tandaLencana('lencana-siang');
@@ -24,18 +22,25 @@ function togglMalam(){
   }
 }
 
-function terbang(emoji, startLeft, startTop, endLeft, endTop, masa, selepas){
-  const stage = document.getElementById('stageFoto');
+// Zarah (particle) terbang melengkung guna 3 titik (mula -> lengkung -> hujung)
+// supaya laluan terasa organik, bukan garis lurus tegang.
+function terbangLengkung(emoji, mula, tengah, akhir, masa, selepas){
+  const stage = document.querySelector('#layar-foto .panggung-wrap');
   const z = document.createElement('div');
   z.className = 'zarah';
   z.textContent = emoji;
-  z.style.left = startLeft; z.style.top = startTop; z.style.opacity = '1';
+  z.style.left = mula.x; z.style.top = mula.y; z.style.opacity = '1';
   stage.appendChild(z);
+
   requestAnimationFrame(()=>{
     requestAnimationFrame(()=>{
-      z.style.left = endLeft; z.style.top = endTop;
+      z.style.left = tengah.x; z.style.top = tengah.y;
     });
   });
+  setTimeout(()=>{
+    z.style.left = akhir.x; z.style.top = akhir.y;
+  }, masa*0.45);
+
   setTimeout(()=>{
     z.style.opacity='0';
     setTimeout(()=>{ z.remove(); if(selepas) selepas(); }, 400);
@@ -43,13 +48,13 @@ function terbang(emoji, startLeft, startTop, endLeft, endTop, masa, selepas){
 }
 
 function hantarCO2(){
-  terbang('💨','2%','40px','44%','120px',950, ()=>{
+  terbangLengkung('💨', {x:'2%',y:'40px'}, {x:'26%',y:'10px'}, {x:'46%',y:'90px'}, 1000, ()=>{
     co2Sedia = true;
     cekReaksiFoto();
   });
 }
 function hantarAir(){
-  terbang('💧','88%','260px','52%','120px',1000, ()=>{
+  terbangLengkung('💧', {x:'86%',y:'255px'}, {x:'62%',y:'270px'}, {x:'50%',y:'150px'}, 1050, ()=>{
     airSedia = true;
     cekReaksiFoto();
   });
@@ -58,24 +63,24 @@ function hantarAir(){
 function cekReaksiFoto(){
   if(!(co2Sedia && airSedia)) return;
   co2Sedia = false; airSedia = false;
-  const daun = document.getElementById('daunBesar');
+  const kanopi = document.getElementById('kanopiGroup');
 
   if(!siang){
     tunjukToast('😴 Tiada cahaya matahari — tumbuhan tidak boleh memasak makanan sekarang!');
     return;
   }
 
-  daun.classList.remove('reaksi'); void daun.offsetWidth; daun.classList.add('reaksi');
+  kanopi.classList.remove('reaksi'); void kanopi.getBBox(); kanopi.classList.add('reaksi');
   tunjukToast('✨ Fotosintesis berjaya! Glukosa & Oksigen dihasilkan!');
   tandaLencana('lencana-glukosa');
   tandaLencana('lencana-oksigen');
 
   setTimeout(()=>{
-    terbang('🫧','50%','120px','50%','-30px',1200, ()=>{
+    terbangLengkung('🫧', {x:'50%',y:'90px'}, {x:'62%',y:'40px'}, {x:'50%',y:'-30px'}, 1200, ()=>{
       oksigenKira++;
       document.getElementById('kirOksigen').textContent = oksigenKira;
     });
-    terbang('🍬','50%','120px','48%','260px',1000, ()=>{
+    terbangLengkung('🍬', {x:'50%',y:'90px'}, {x:'40%',y:'160px'}, {x:'46%',y:'250px'}, 1050, ()=>{
       glukosaKira++;
       document.getElementById('kirGlukosa').textContent = glukosaKira;
       tumbuhkanBuah();
@@ -84,11 +89,13 @@ function cekReaksiFoto(){
 }
 
 function tumbuhkanBuah(){
-  const slots = ['buah1','buah2','buah3'];
+  const slots = ['buah1','buah2','buah3','buah4'];
   for(const id of slots){
     const el = document.getElementById(id);
     if(!el.classList.contains('tumbuh')){
       el.classList.add('tumbuh');
+      const t = el.getAttribute('transform').replace('scale(0)','scale(1)');
+      el.setAttribute('transform', t);
       buahKira++;
       return;
     }

@@ -1,18 +1,42 @@
 /* ======================================================
-   GERAK.JS — Jelajah Gerak Balas (sandbox interaktif)
+   GERAK.JS — Jelajah Gerak Balas (simulasi SVG organik)
+
+   Setiap sisi ('kiri'/'kanan') memetakan terus kepada satu
+   titik-X SASARAN mutlak untuk hujung pucuk/akar (110 = kiri,
+   290 = kanan). Ini mengelakkan sebarang kekeliruan tanda
+   arah putaran (positif/negatif) — hujung SENTIASA bergerak
+   ke sisi yang dipilih, tidak kira sama ada ia berpunca dari
+   atas (akar) atau bawah (pucuk).
    ====================================================== */
 
 let cahayaSisi = null;   // null | 'kiri' | 'kanan'
 let airSisi = null;
 
+function kemaskiniPucuk(){
+  const asalX=200, asalY=118, hujungYAsal=24;
+  let hujungX=200, kawalX=200, sudut=0;
+  if(cahayaSisi==='kiri'){ hujungX=104; kawalX=150; sudut=-30; }
+  else if(cahayaSisi==='kanan'){ hujungX=296; kawalX=250; sudut=30; }
+  const kawalY = (asalY+hujungYAsal)/2 - 6;
+  document.getElementById('pathPucuk').setAttribute('d', `M${asalX},${asalY} Q${kawalX},${kawalY} ${hujungX},${hujungYAsal}`);
+  document.getElementById('hujungPucuk').setAttribute('transform', `translate(${hujungX},${hujungYAsal}) rotate(${sudut})`);
+}
+
+function kemaskiniAkar(){
+  const asalX=200, asalY=152, hujungYAsal=248;
+  let hujungX=200, kawalX=200, sudut=0;
+  if(airSisi==='kiri'){ hujungX=104; kawalX=150; sudut=-24; }
+  else if(airSisi==='kanan'){ hujungX=296; kawalX=250; sudut=24; }
+  const kawalY = (asalY+hujungYAsal)/2 + 8;
+  document.getElementById('pathAkar').setAttribute('d', `M${asalX},${asalY} Q${kawalX},${kawalY} ${hujungX},${hujungYAsal}`);
+  document.getElementById('hujungAkar').setAttribute('transform', `translate(${hujungX},${hujungYAsal}) rotate(${sudut})`);
+}
+
 function setCahaya(sisi){
   cahayaSisi = (cahayaSisi===sisi) ? null : sisi;
   document.querySelector('.matahari-kiri').classList.toggle('aktif', cahayaSisi==='kiri');
   document.querySelector('.matahari-kanan').classList.toggle('aktif', cahayaSisi==='kanan');
-  // Pucuk berpunca (transform-origin) di BAWAH & menghala ke ATAS:
-  // putaran POSITIF (ikut jam) menggerakkan hujung atas ke KANAN.
-  const sudut = cahayaSisi==='kiri' ? -32 : cahayaSisi==='kanan' ? 32 : 0;
-  document.getElementById('pucukBatang').style.transform = `rotate(${sudut}deg)`;
+  kemaskiniPucuk();
   if(cahayaSisi){
     tunjukToast('☀️ Pucuk membengkok mengejar cahaya! (Fototropisme)');
     tandaLencana('lencana-cahaya');
@@ -25,11 +49,7 @@ function setAir(sisi){
   airSisi = (airSisi===sisi) ? null : sisi;
   document.querySelector('.air-kiri').classList.toggle('aktif', airSisi==='kiri');
   document.querySelector('.air-kanan').classList.toggle('aktif', airSisi==='kanan');
-  // Akar berpunca (transform-origin) di ATAS & menghala ke BAWAH:
-  // arah putaran BERLAWANAN dengan pucuk supaya hujung bawah bergerak
-  // ke arah yang BETUL (kiri = sudut positif, kanan = sudut negatif).
-  const sudut = airSisi==='kiri' ? 30 : airSisi==='kanan' ? -30 : 0;
-  document.getElementById('akarBatang').style.transform = `rotate(${sudut}deg)`;
+  kemaskiniAkar();
   if(airSisi){
     tunjukToast('💧 Akar mencari sumber air! (Hidrotropisme)');
     tandaLencana('lencana-air');
@@ -41,19 +61,22 @@ function setAir(sisi){
 function resetGerak(){
   cahayaSisi=null; airSisi=null;
   document.querySelectorAll('.matahari-kiri,.matahari-kanan,.air-kiri,.air-kanan').forEach(b=>b.classList.remove('aktif'));
-  document.getElementById('pucukBatang').style.transform='rotate(0deg)';
-  document.getElementById('akarBatang').style.transform='rotate(0deg)';
+  kemaskiniPucuk();
+  kemaskiniAkar();
   tunjukToast('🔄 Tumbuhan direset ke kedudukan asal.');
 }
 
 let semaluTimer;
 function sentuhSemalu(){
-  const el = document.getElementById('demoSemalu');
-  el.classList.add('semalu-tutup');
+  const kiri = document.querySelectorAll('#daunSemaluKiri .leaflet');
+  const kanan = document.querySelectorAll('#daunSemaluKanan .leaflet');
+  [...kiri, ...kanan].forEach(el=>el.classList.add('tutup'));
   tunjukToast('🤚 Disentuh! Daun Pokok Semalu menutup untuk lindungi diri. (Sentuhan)');
   tandaLencana('lencana-sentuhan');
   clearTimeout(semaluTimer);
-  semaluTimer = setTimeout(()=> el.classList.remove('semalu-tutup'), 2200);
+  semaluTimer = setTimeout(()=>{
+    [...kiri, ...kanan].forEach(el=>el.classList.remove('tutup'));
+  }, 2300);
 }
 
 let venusTimer;
@@ -66,5 +89,5 @@ function sentuhVenus(){
   clearTimeout(venusTimer);
   venusTimer = setTimeout(()=>{
     el.classList.remove('venus-tutup');
-  }, 2400);
+  }, 2500);
 }

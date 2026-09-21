@@ -1,11 +1,13 @@
 /* ======================================================
-   MEMORI.JS — Padanan Ingatan (permainan kad memori baharu)
+   MEMORI.JS — Padanan Ingatan (dua kategori bertema)
    ====================================================== */
 
-let kadTerbalik = [];   // kad yang sedang terbuka (maks 2)
+let kadTerbalik = [];
 let kadDipadan = 0;
 let alihanMemori = 0;
 let kunciKlik = false;
+let kadAktifSenarai = [];
+let tajukMemoriSemasa = '';
 
 function kocokArray(arr){
   const a = [...arr];
@@ -16,18 +18,31 @@ function kocokArray(arr){
   return a;
 }
 
+function bukaMemori(kategori){
+  if(kategori==='gerak'){
+    kadAktifSenarai = kadMemoriGerak;
+    tajukMemoriSemasa = '🧭 Padanan: Rangsangan → Gerak Balas';
+  } else {
+    kadAktifSenarai = kadMemoriFoto;
+    tajukMemoriSemasa = '🧪 Padanan: Bahan → Hasil Fotosintesis';
+  }
+  document.getElementById('tajuk-memori').textContent = tajukMemoriSemasa;
+  tunjukSkrin('layar-memori');
+  mulakanMemori();
+}
+
 function mulakanMemori(){
   kadTerbalik = [];
   kadDipadan = 0;
   alihanMemori = 0;
   kunciKlik = false;
   document.getElementById('memori-alihan').textContent = '0';
-  document.getElementById('memori-pasangan').textContent = '0 / ' + (kadMemori.length/2);
+  document.getElementById('memori-pasangan').textContent = '0 / ' + (kadAktifSenarai.length/2);
   document.getElementById('memori-tamat-kad').style.display = 'none';
 
   const grid = document.getElementById('grid-memori');
   grid.innerHTML = '';
-  const kadKocok = kocokArray(kadMemori);
+  const kadKocok = kocokArray(kadAktifSenarai);
   kadKocok.forEach((item, idx)=>{
     const kad = document.createElement('div');
     kad.className = 'kad-memori';
@@ -64,10 +79,10 @@ function klikKadMemori(kad){
         a.classList.add('padan'); b.classList.add('padan');
         kadTerbalik = [];
         kadDipadan++;
-        document.getElementById('memori-pasangan').textContent = kadDipadan + ' / ' + (kadMemori.length/2);
-        tunjukToast('✅ Padanan dijumpai! ' + a.querySelector('.kad-label').textContent);
+        document.getElementById('memori-pasangan').textContent = kadDipadan + ' / ' + (kadAktifSenarai.length/2);
+        tunjukToast('✅ Padanan dijumpai!');
         kunciKlik = false;
-        if(kadDipadan === kadMemori.length/2){
+        if(kadDipadan === kadAktifSenarai.length/2){
           setTimeout(tamatMemori, 500);
         }
       }, 500);
