@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuasa Rahsia Tumbuh-Tumbuhan</title>
+<meta name="description" content="Permainan Sains Tahun 4 — Unit 4: Tumbuh-Tumbuhan. Jelajah, kuiz dan padanan ingatan tentang Gerak Balas &amp; Fotosintesis.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="game">
+
+  <!-- ===== MENU UTAMA ===== -->
+  <div class="screen aktif" id="layar-menu">
+    <h1>KUASA RAHSIA<br>TUMBUH-TUMBUHAN!</h1>
+    <p class="sub">Sains Tahun 4 · Unit 4 — Pilih cara kamu mahu belajar! 🌱</p>
+    <div class="kad-pilih-wrap">
+      <div class="kad-pilih" onclick="bukaScene('gerak')">
+        <span class="emo">🧭</span>
+        <b>Jelajah Gerak Balas</b>
+        <div class="ket">Cuba beri cahaya, air &amp; sentuhan — lihat apa tumbuhan buat!</div>
+      </div>
+      <div class="kad-pilih" onclick="bukaScene('foto')">
+        <span class="emo">🧪</span>
+        <b>Dapur Magis Fotosintesis</b>
+        <div class="ket">Hantar bahan ke daun dan tengok tumbuhan memasak makanan!</div>
+      </div>
+      <div class="kad-pilih" onclick="bukaScene('memori')">
+        <span class="emo">🃏</span>
+        <b>Padanan Ingatan</b>
+        <div class="ket">Buka kad dan padankan konsep dengan contohnya!</div>
+      </div>
+      <div class="kad-pilih" onclick="bukaScene('kuiz')">
+        <span class="emo">🏆</span>
+        <b>Kuiz Detektif Botani</b>
+        <div class="ket">Uji kefahaman kamu dan kumpul skor tertinggi!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 1: GERAK BALAS ===== -->
+  <div class="screen" id="layar-gerak">
+    <div id="topbar">
+      <div class="bulat-btn" onclick="keMenu()">⬅</div>
+      <h2 style="flex:1;margin:0;">🧭 Jelajah Gerak Balas</h2>
+      <div class="bulat-btn" onclick="resetGerak()">🔄</div>
+    </div>
+
+    <div class="panggung" id="stageGerak">
+      <div class="garis-tanah"></div>
+      <div class="pasu"></div>
+      <div class="pucuk-anchor"><div class="pucuk-batang" id="pucukBatang"><div class="daun-hujung">🌿</div></div></div>
+      <div class="akar-anchor"><div class="akar-batang" id="akarBatang"><div class="akar-hujung">🪱</div></div></div>
+
+      <div class="btn-bulat-mini matahari-kiri" onclick="setCahaya('kiri')">☀️</div>
+      <div class="btn-bulat-mini matahari-kanan" onclick="setCahaya('kanan')">☀️</div>
+      <div class="btn-bulat-mini air-kiri" onclick="setAir('kiri')">💧</div>
+      <div class="btn-bulat-mini air-kanan" onclick="setAir('kanan')">💧</div>
+    </div>
+
+    <div class="demo-row">
+      <div class="demo-kad">
+        <div class="tajuk-demo">🤚 Sentuh daun Pokok Semalu</div>
+        <div class="demo-panggung" id="demoSemalu" onclick="sentuhSemalu()">
+          <div class="semalu-batang"></div>
+          <div class="daun-kiri">🍃</div>
+          <div class="daun-kanan">🍃</div>
+        </div>
+      </div>
+      <div class="demo-kad">
+        <div class="tajuk-demo">🪰 Sentuh Perangkap Lalat Venus</div>
+        <div class="demo-panggung" id="demoVenus" onclick="sentuhVenus()">
+          <div class="venus-batang"></div>
+          <div class="lalat" id="lalatIkon">🪰</div>
+          <div class="venus-atas">🌿</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lencana-bar">
+      <div class="lencana" id="lencana-cahaya"><span>☀️</span><div class="tag">Cahaya</div></div>
+      <div class="lencana" id="lencana-air"><span>💧</span><div class="tag">Air</div></div>
+      <div class="lencana" id="lencana-graviti"><span>🌍</span><div class="tag">Graviti</div></div>
+      <div class="lencana" id="lencana-sentuhan"><span>🤚</span><div class="tag">Sentuhan</div></div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 2: FOTOSINTESIS ===== -->
+  <div class="screen" id="layar-foto">
+    <div id="topbar">
+      <div class="bulat-btn" onclick="keMenu()">⬅</div>
+      <h2 style="flex:1;margin:0;">🧪 Dapur Magis Fotosintesis</h2>
+      <div class="kaunter-hud">
+        <div class="kaunter">🍬 <span id="kirGlukosa">0</span></div>
+        <div class="kaunter">🫧 <span id="kirOksigen">0</span></div>
+      </div>
+    </div>
+
+    <div class="panggung" id="stageFoto">
+      <div class="matahari-toggle" id="matahariBesar" onclick="togglMalam()">☀️</div>
+      <div class="pokok2-batang"></div>
+      <div class="daun2" id="daunBesar">🍃</div>
+      <div class="akar2"></div>
+
+      <div class="slot-buah" id="buah1" style="left:38%;top:120px;">🍅</div>
+      <div class="slot-buah" id="buah2" style="left:64%;top:135px;">🍅</div>
+      <div class="slot-buah" id="buah3" style="left:44%;top:155px;">🍅</div>
+
+      <div class="btn-fotosintesis btn-co2" onclick="hantarCO2()"><span class="ikon">💨</span>CO₂</div>
+      <div class="btn-fotosintesis btn-air" onclick="hantarAir()"><span class="ikon">💧</span>Air</div>
+    </div>
+
+    <div class="info-toggle-wrap">
+      <button class="btn hijau" style="font-size:14px;padding:9px 18px;" onclick="toggleFormula()">👀 Lihat Formula Magis</button>
+    </div>
+    <div class="kotak-formula" id="kotakFormula">
+      Karbon Dioksida + Air &nbsp;<span style="color:var(--hijau);">(bantuan Cahaya + Klorofil)</span>&nbsp; ➡️ Glukosa + Oksigen
+    </div>
+
+    <div class="lencana-bar">
+      <div class="lencana" id="lencana-siang"><span>☀️</span><div class="tag">Siang</div></div>
+      <div class="lencana" id="lencana-malam"><span>🌙</span><div class="tag">Malam</div></div>
+      <div class="lencana" id="lencana-glukosa"><span>🍬</span><div class="tag">Glukosa</div></div>
+      <div class="lencana" id="lencana-oksigen"><span>🫧</span><div class="tag">Oksigen</div></div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 3: PADANAN INGATAN ===== -->
+  <div class="screen" id="layar-memori">
+    <div id="topbar">
+      <div class="bulat-btn" onclick="keMenu()">⬅</div>
+      <h2 style="flex:1;margin:0;">🃏 Padanan Ingatan</h2>
+      <div class="bulat-btn" onclick="mulakanMemori()">🔄</div>
+    </div>
+    <div class="memori-hud">
+      <div class="kaunter">🔁 Alihan: <span id="memori-alihan">0</span></div>
+      <div class="kaunter">✅ Pasangan: <span id="memori-pasangan">0 / 8</span></div>
+    </div>
+    <div id="grid-memori"></div>
+
+    <div class="kad" id="memori-tamat-kad" style="display:none;background:var(--kad-bg);border:3px solid var(--emas);border-radius:16px;padding:18px;text-align:center;max-width:400px;margin:16px auto 0;">
+      <div style="font-size:56px;">🎉</div>
+      <h2>Syabas! Semua Padan!</h2>
+      <p>Kamu selesai dengan <b><span id="memori-alihan-akhir">0</span></b> alihan.</p>
+      <div class="btn-tengah"><button class="btn hijau" onclick="mulakanMemori()">MAIN SEMULA 🔁</button></div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 4: KUIZ - PILIH TOPIK ===== -->
+  <div class="screen" id="layar-kuiz-pilih">
+    <div id="topbar">
+      <div class="bulat-btn" onclick="keMenu()">⬅</div>
+      <h2 style="flex:1;margin:0;">🏆 Kuiz Detektif Botani</h2>
+      <div style="width:40px;"></div>
+    </div>
+    <p class="sub">Pilih topik yang kamu mahu diuji</p>
+    <div class="kad-topik-wrap">
+      <div class="kad-topik" onclick="mulakanKuiz('gerak')">
+        <span class="emo">🧭</span>
+        <b>Gerak Balas</b>
+        <div class="ket">8 soalan</div>
+      </div>
+      <div class="kad-topik" onclick="mulakanKuiz('foto')">
+        <span class="emo">🧪</span>
+        <b>Fotosintesis</b>
+        <div class="ket">7 soalan</div>
+      </div>
+      <div class="kad-topik" onclick="mulakanKuiz('campuran')">
+        <span class="emo">🏆</span>
+        <b>Campuran (Semua)</b>
+        <div class="ket">15 soalan</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 4b: KUIZ - SOALAN ===== -->
+  <div class="screen" id="layar-kuiz-soalan">
+    <div id="topbar">
+      <div class="bulat-btn" onclick="keMenu()">⬅</div>
+      <h2 style="flex:1;margin:0;" id="tajuk-kuiz-soalan">Kuiz</h2>
+      <div class="kaunter">🧪 <span id="kuiz-skor-hud">0</span></div>
+    </div>
+    <div id="dots-kuiz"></div>
+    <div class="soalan-kad">
+      <div class="senario">
+        <div class="ikon" id="kuiz-senario-ikon">🌱</div>
+        <div id="kuiz-senario-teks">Teks soalan...</div>
+      </div>
+      <div class="pilihan-grid" id="kuiz-pilihan-grid"></div>
+      <div id="kuiz-maklumbalas"></div>
+    </div>
+    <div class="btn-tengah">
+      <button class="btn" id="btn-kuiz-seterusnya" disabled onclick="soalanKuizSeterusnya()">SETERUSNYA ▶</button>
+    </div>
+  </div>
+
+  <!-- ===== SCENE 4c: KUIZ - TAMAT ===== -->
+  <div class="screen" id="layar-kuiz-tamat">
+    <div class="kad" style="text-align:center;background:var(--kad-bg);border:3px solid var(--hijau);border-radius:16px;padding:18px;max-width:460px;margin:16px auto 0;">
+      <div class="lencana-kad" id="kuiz-lencana-ikon">🏆</div>
+      <h2>Kuiz Selesai!</h2>
+      <p id="kuiz-gelaran-tamat" style="font-size:19px;font-weight:bold;color:var(--hijau-gelap);"></p>
+      <p id="kuiz-skor-akhir" style="font-size:22px;font-weight:bold;"></p>
+      <div class="btn-tengah">
+        <button class="btn hijau" onclick="bukaScene('kuiz')">CUBA TOPIK LAIN 🔁</button>
+        <button class="btn" onclick="keMenu()">KE MENU UTAMA 🏠</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+  <footer class="kredit">Dibina untuk Sains Tahun 4 · Unit 4: Tumbuh-Tumbuhan</footer>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/gerak.js"></script>
+<script src="js/foto.js"></script>
+<script src="js/kuiz.js"></script>
+<script src="js/memori.js"></script>
+</body>
+</html>
