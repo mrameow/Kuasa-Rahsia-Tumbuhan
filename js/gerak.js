@@ -90,7 +90,7 @@ function sentuhVenus(){
 
   // Langkah 1: lalat terbang masuk ke dalam perangkap yang masih terbuka.
   tunjukToast('🪰 Lalat hinggap di atas perangkap...');
-  posisiLalat.setAttribute('transform', 'translate(-73,44)');
+  posisiLalat.setAttribute('transform', 'translate(-85,44)');
 
   // Langkah 2: selepas lalat sampai, perangkap menutup pantas.
   clearTimeout(venusTimer);
