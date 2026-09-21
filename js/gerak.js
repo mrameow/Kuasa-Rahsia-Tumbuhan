@@ -79,15 +79,33 @@ function sentuhSemalu(){
   }, 2300);
 }
 
-let venusTimer;
+let venusTimer, venusSedangMain = false;
 function sentuhVenus(){
-  const el = document.getElementById('demoVenus');
-  if(el.classList.contains('venus-tutup')) return;
-  el.classList.add('venus-tutup');
-  tunjukToast('🪰 Perangkap Lalat Venus menutup pantas untuk menangkap mangsa!');
-  tandaLencana('lencana-sentuhan');
+  if(venusSedangMain) return;
+  venusSedangMain = true;
+
+  const stage = document.getElementById('demoVenus');
+  const posisiLalat = document.getElementById('lalatPosisi');
+  const lalat = document.getElementById('lalatVenus');
+
+  // Langkah 1: lalat terbang masuk ke dalam perangkap yang masih terbuka.
+  tunjukToast('🪰 Lalat hinggap di atas perangkap...');
+  posisiLalat.setAttribute('transform', 'translate(-73,44)');
+
+  // Langkah 2: selepas lalat sampai, perangkap menutup pantas.
   clearTimeout(venusTimer);
   venusTimer = setTimeout(()=>{
-    el.classList.remove('venus-tutup');
-  }, 2500);
+    stage.classList.add('venus-tutup');
+    lalat.classList.add('tertangkap');
+    tunjukToast('🪰 Perangkap Lalat Venus menutup pantas untuk menangkap mangsa!');
+    tandaLencana('lencana-sentuhan');
+
+    // Langkah 3: selepas beberapa saat, perangkap terbuka semula & lalat baharu muncul.
+    venusTimer = setTimeout(()=>{
+      stage.classList.remove('venus-tutup');
+      lalat.classList.remove('tertangkap');
+      posisiLalat.setAttribute('transform', 'translate(0,0)');
+      venusSedangMain = false;
+    }, 2200);
+  }, 600);
 }
